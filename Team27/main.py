@@ -7,7 +7,10 @@ import json
 import simplejson as json
 import pygame
 import time
-
+import gevent
+from gevent.wsgi import WSGIServer
+from gevent.queue import Queue
+from sse import ServerSentEvent
 
 app = Flask(__name__)
 
@@ -30,8 +33,6 @@ matchrunning = True
 @app.route("/")                                                                     #Visar att detta är rootsidan.
 def index():
     return render_template("start.html")                                            #Här kan man lägga in url för att skicka till annan sida.
-
-
 
 
 @app.route("/register/", methods = ["POST"])                                        #Denna def får fram och visar vad nicknacmet för det scannade kortet är
@@ -238,11 +239,46 @@ Buttonblue.when_pressed = pointblue
 def registrering_pingponghack():
     kod = request.args.get("id")
     return render_template("registrering_pingponghack.html", kod_variable=kod)
-    
-if __name__=="__main__":                                                 #ser till att servern startar när __name__ anropas.
-    app.run (host='0.0.0.0', debug=True)                     #gör den public
 
 
+@app.route("/publish")
+def publish():
+    #Send dummy data
+    def notify():
+        msg = "{'Redpoints': %s,\
+              'Bluepoints' : %s,\
+              'Winner' : %s,\
+              'Redset' : %s,\
+              'Blueset' : %s,\
+              'blueplayer' : %s,\
+              'matchstart' : %s\
+                }" % redpoints, bluepoints, win, redset, blueset, player1, player2, matchrunning
+        for sub in subscriptions[:]:
+            sub.put(msg)
+
+    gevent.spawn(notify)
+    return "OK"
+
+
+@app.route("/subscribe")
+def subscribe():
+    def gen():
+        q = Queue()
+        subscriptions.append(q)
+        try:
+            while True:
+                result = q.get()
+                ev = ServerSentEvent(str(result))
+                yield ev.encode()
+        except GeneratorExit:  # Or maybe use flask signals
+            subscriptions.remove(q)
+
+    return Response(gen(), mimetype="text/event-stream")
+
+if __name__ == "__main__":
+    app.debug = True
+    server = WSGIServer(("0.0.0.0", 5000), app)
+    server.serve_forever()
 
 
 
