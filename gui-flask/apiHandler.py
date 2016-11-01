@@ -9,17 +9,25 @@ app = Flask(__name__)
 cors = CORS(app, resources={r"*": {"origins": "*"}})
 @app.route('/users/<card_id>')
 def users(card_id):
-    query = "SELECT * FROM user WHERE cardID=%s"
+    query = "SELECT cardID FROM user WHERE cardID=%s"
     config.cur.execute(query, (card_id,))
     res = config.cur.fetchall()
-    json_result = {
-        "name" : res[0][1],
-        "card_id": res[0][2],
-        "wins": res[0][3],
-        "losses": res[0][4],
-        "totalgames": res[0][5]
-    }
-    return json.dumps(json_result)
+    for i in res:
+
+        if i[0] == card_id:
+            query2 = "SELECT * FROM user WHERE cardID=%s"
+            config.cur.execute(query2, (card_id,))
+            res2 = config.cur.fetchall()
+            json_result = {
+             "name" : res2[0][1],
+                "card_id": res2[0][2],
+                "wins": res2[0][3],
+                "losses": res2[0][4],
+                "totalgames": res2[0][5]
+            }
+            return json.dumps(json_result)
+    return "null"
+
 
 @app.route('/register', methods=['POST','GET'])
 def register():
@@ -32,7 +40,7 @@ def register():
         print(query)
         return "Registration successful"
     else: 
-        return "nej"
+        return "null"
 
 
 
