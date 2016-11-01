@@ -1,7 +1,8 @@
 # coding=utf-8
 import pymysql.cursors
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, Response
 from flask import redirect
+from flask_cors import CORS, cross_origin
 from gpiozero import Button
 import json
 import simplejson as json
@@ -13,6 +14,10 @@ from gevent.queue import Queue
 from sse import ServerSentEvent
 
 app = Flask(__name__)
+CORS(app)
+
+subscriptions = []
+
 
 global info
 redset = 0
@@ -250,16 +255,17 @@ def registrering_pingponghack():
 def publish():
     #Send dummy data
     def notify():
-        msg = "{'Redpoints': %d,\
-              'Bluepoints' : %d,\
-              'Winner' : %s,\
-              'Redset' : %d,\
-              'Blueset' : %d,\
-              'blueplayer' : %s,\
-              'matchstart' : %s\
-                }" % (redpoints, bluepoints, win, redset, blueset, player1, player2, matchrunning)
+        info = [{'Redpoints': redpoints,
+             'Bluepoints' : bluepoints,
+             'Winner' : win,
+             'Redset' : redset,
+             'Blueset' : blueset,
+
+             'blueplayer' : player2,
+             'matchstart' : matchrunning
+           }]
         for sub in subscriptions[:]:
-            sub.put(msg)
+            sub.put(json.dumps(info[0]))
 
     gevent.spawn(notify)
     return "OK"
