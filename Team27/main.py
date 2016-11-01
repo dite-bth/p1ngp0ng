@@ -1,8 +1,9 @@
 # coding=utf-8
 import pymysql.cursors
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, Response
 from flask import redirect
-#from gpiozero import Button
+from flask_cors import CORS, cross_origin
+from gpiozero import Button
 import json
 import simplejson as json
 import pygame
@@ -13,6 +14,10 @@ from gevent.queue import Queue
 from sse import ServerSentEvent
 
 app = Flask(__name__)
+CORS(app)
+
+subscriptions = []
+
 
 global info
 redset = 0
@@ -22,17 +27,22 @@ win = "none"
 winner = False
 redpoints = 0
 bluepoints = 0
-#Buttonred = Button(19)
-#Buttonblue = Button(21)s
-#Buttonreset = Button(23)
-player1 = ""
-player2 = ""
+Buttonred = Button(19)
+Buttonblue = Button(21)
+Buttonreset = Button(23)
+player1 = "Player 1"
+player2 = "Player 2"
 global matchrunning
 matchrunning = True
 
 @app.route("/")                                                                     #Visar att detta är rootsidan.
 def index():
     return render_template("start.html")                                            #Här kan man lägga in url för att skicka till annan sida.
+
+
+@app.route("/match")                                                                     #Visar att detta är rootsidan.
+def match():
+    return render_template("MatchGUI/index.html")                                            #Här kan man lägga in url för att skicka till annan sida.
 
 
 @app.route("/register/", methods = ["POST"])                                        #Denna def får fram och visar vad nicknacmet för det scannade kortet är
@@ -232,8 +242,8 @@ def dump():
         json.dump(info,outfile) 
 
         
-#Buttonred.when_pressed = pointred
-#Buttonblue.when_pressed = pointblue
+Buttonred.when_pressed = pointred
+Buttonblue.when_pressed = pointblue
 
 @app.route("/registrering_pingponghack")
 def registrering_pingponghack():
@@ -245,14 +255,10 @@ def registrering_pingponghack():
 def publish():
     #Send dummy data
     def notify():
-        msg = "{'Redpoints': %s,\
-              'Bluepoints' : %s,\
-              'Winner' : %s,\
-              'Redset' : %s,\
-              'Blueset' : %s,\
-              'blueplayer' : %s,\
-              'matchstart' : %s\
-                }" % redpoints, bluepoints, win, redset, blueset, player1, player2, matchrunning
+        msg = '{"player1": "Linus",'\
+            '"player1score": "10",'\
+            '"player2": "Masse",'\
+            '"player2score": "9"}'
         for sub in subscriptions[:]:
             sub.put(msg)
 
@@ -275,17 +281,11 @@ def subscribe():
 
     return Response(gen(), mimetype="text/event-stream")
 
+@app.route('/playgame')
+def playgame():
+    return render_template('index.html')
+
 if __name__ == "__main__":
     app.debug = True
-    server = WSGIServer(("0.0.0.0", 5000), app)
+    server = WSGIServer(("127.0.0.1", 5000), app)
     server.serve_forever()
-
-
-
-
-
-
-
-
-
-
