@@ -1,1 +1,1 @@
-[{"matchstart": true}]
+[{"Winner": "none", "matchstart": true, "Redset": 0, "Bluepoints": 0, "blueplayer": "", "Redpoints": 3, "Blueset": 0}]

@@ -28,14 +28,13 @@
         var source = new EventSource("/subscribe");
             source.onmessage = function(e) {
                 data = JSON.parse(e.data)
-                $(".score1").append(data['player1score']);
+                /*$(".score1").append(data['player1score']);
                 $(".playerName1").append(data['player1']);
                 $(".score2").append(data['player2score']);
-                $(".playerName2").append(data['player2']);
+                $(".playerName2").append(data['player2']);*/
                 console.log(data);
             };
       
-            $.get("http://localhost:5000/publish");
       </script>
       <div class="scoreView score1" id="scoreViewOne"></div>
       <div class="serving"></div>

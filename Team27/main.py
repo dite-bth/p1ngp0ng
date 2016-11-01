@@ -1,8 +1,9 @@
 # coding=utf-8
 import pymysql.cursors
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, Response
 from flask import redirect
-#from gpiozero import Button
+import requests
+from gpiozero import Button
 import json
 import simplejson as json
 import pygame
@@ -14,6 +15,8 @@ from sse import ServerSentEvent
 
 app = Flask(__name__)
 
+subscriptions = []
+
 global info
 redset = 0
 blueset = 0
@@ -22,9 +25,9 @@ win = "none"
 winner = False
 redpoints = 0
 bluepoints = 0
-#Buttonred = Button(19)
-#Buttonblue = Button(21)s
-#Buttonreset = Button(23)
+Buttonred = Button(19)
+Buttonblue = Button(21)
+Buttonreset = Button(23)
 player1 = ""
 player2 = ""
 global matchrunning
@@ -154,6 +157,8 @@ def pointred():
         blueset = 0
     else:
         print("Player red has " + str(redpoints) + " points!")
+        #publish()
+        requests.get("http://localhost:5000/publish")
 
           
             
@@ -232,8 +237,8 @@ def dump():
         json.dump(info,outfile) 
 
         
-#Buttonred.when_pressed = pointred
-#Buttonblue.when_pressed = pointblue
+Buttonred.when_pressed = pointred
+Buttonblue.when_pressed = pointblue
 
 @app.route("/registrering_pingponghack")
 def registrering_pingponghack():
@@ -245,16 +250,16 @@ def registrering_pingponghack():
 def publish():
     #Send dummy data
     def notify():
-        msg = "{'Redpoints': %s,\
-              'Bluepoints' : %s,\
-              'Winner' : %s,\
-              'Redset' : %s,\
-              'Blueset' : %s,\
-              'blueplayer' : %s,\
-              'matchstart' : %s\
-                }" % redpoints, bluepoints, win, redset, blueset, player1, player2, matchrunning
+        info = [{'Redpoints': redpoints,
+             'Bluepoints' : bluepoints,
+             'Winner' : win,
+             'Redset' : redset,
+             'Blueset' : blueset,
+             'blueplayer' : player2,
+             'matchstart' : matchrunning
+           }]
         for sub in subscriptions[:]:
-            sub.put(msg)
+            sub.put(json.dumps(info[0]))
 
     gevent.spawn(notify)
     return "OK"
@@ -274,6 +279,10 @@ def subscribe():
             subscriptions.remove(q)
 
     return Response(gen(), mimetype="text/event-stream")
+
+@app.route('/playgame')
+def playgame():
+	return render_template('index.html')
 
 if __name__ == "__main__":
     app.debug = True
