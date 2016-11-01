@@ -4,8 +4,10 @@
         <meta charset="utf-8" />
         <title>Pingis</title>
         
-        <script src="script/animations.js"></script>
-        <link href="style.css" type="text/css" rel="stylesheet" /> 
+      <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+       <!-- <script src="{{ url_for('static', filename='script/animations.js') }}"></script>-->
+
+        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}">
 
     </head>
 
@@ -22,11 +24,23 @@
             <div class="setPoint setRight 3"></div>
 
       </div>
-
-      <div class="scoreView" id="scoreViewOne">0</div>
+              <script type="text/javascript">
+        var source = new EventSource("/subscribe");
+            source.onmessage = function(e) {
+                data = JSON.parse(e.data)
+                $(".score1").append(data['player1score']);
+                $(".playerName1").append(data['player1']);
+                $(".score2").append(data['player2score']);
+                $(".playerName2").append(data['player2']);
+                console.log(data);
+            };
+      
+            $.get("http://localhost:5000/publish");
+      </script>
+      <div class="scoreView score1" id="scoreViewOne"></div>
       <div class="serving"></div>
       <div class="statBox">WINS : 100</div>
-      <div class="playerName">Blu
+      <div class="playerName playerName1">
       <div class="eloView">Rating: NULL</div></div>
 
       </div>
@@ -42,18 +56,19 @@
 
       </div>
 
-      <div class="scoreView" id="scoreViewTwo">0</div>
+      <div class="scoreView score2" id="scoreViewTwo"></div>
       <div class="serving"><div class="servingText">Serve</div> <div class="servBall"></div></div>
       <div class="statBox">WINS : 120</div>
-      <div class="playerName">Red
+      <div class="playerName playerName2">
       <div class="eloView">Rating: NULL</div></div>
 
       </div>
 
       </div>
 
-      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+      <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
       <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
-      <script src="js/ajax.js"></script>
+       <script src="{{ url_for('static', filename='js/ajax.js') }}"></script>-->
+       <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     </body>
 </html>
