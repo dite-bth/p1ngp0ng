@@ -1,0 +1,18 @@
+body{
+  font-family: 'Press Start 2P', cursive;
+  background-color: #000;
+  color: #fff;
+}
+.h1{
+  color:#ffa312 ;
+}
+.font-headers{
+  color:#ffa312 ;
+  font-size: 20px;
+}
+.font-scores{
+  font-size: 16px;
+}
+.table-striped>tbody>tr:nth-of-type(odd) {
+  background-color: #000;
+}
