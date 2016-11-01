@@ -25,14 +25,19 @@ bluepoints = 0
 Buttonred = Button(19)
 Buttonblue = Button(21)
 Buttonreset = Button(23)
-player1 = ""
-player2 = ""
+player1 = "Player 1"
+player2 = "Player 2"
 global matchrunning
 matchrunning = True
 
 @app.route("/")                                                                     #Visar att detta är rootsidan.
 def index():
     return render_template("start.html")                                            #Här kan man lägga in url för att skicka till annan sida.
+
+
+@app.route("/match")                                                                     #Visar att detta är rootsidan.
+def match():
+    return render_template("MatchGUI/index.html")                                            #Här kan man lägga in url för att skicka till annan sida.
 
 
 @app.route("/register/", methods = ["POST"])                                        #Denna def får fram och visar vad nicknacmet för det scannade kortet är
@@ -245,14 +250,14 @@ def registrering_pingponghack():
 def publish():
     #Send dummy data
     def notify():
-        msg = "{'Redpoints': %s,\
-              'Bluepoints' : %s,\
+        msg = "{'Redpoints': %d,\
+              'Bluepoints' : %d,\
               'Winner' : %s,\
-              'Redset' : %s,\
-              'Blueset' : %s,\
+              'Redset' : %d,\
+              'Blueset' : %d,\
               'blueplayer' : %s,\
               'matchstart' : %s\
-                }" % redpoints, bluepoints, win, redset, blueset, player1, player2, matchrunning
+                }" % (redpoints, bluepoints, win, redset, blueset, player1, player2, matchrunning)
         for sub in subscriptions[:]:
             sub.put(msg)
 
@@ -277,7 +282,7 @@ def subscribe():
 
 if __name__ == "__main__":
     app.debug = True
-    server = WSGIServer(("0.0.0.0", 5000), app)
+    server = WSGIServer(("127.0.0.1", 5000), app)
     server.serve_forever()
 
 
