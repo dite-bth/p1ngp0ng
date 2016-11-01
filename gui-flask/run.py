@@ -4,13 +4,16 @@ import gevent
 from gevent.wsgi import WSGIServer
 from gevent.queue import Queue
 import sse
+import requests
 
 app = Flask(__name__)
 subscriptions = []
 
 @app.route('/')
-def users():
-	return render_template('screen.html')
+def index():
+    return "1"
+
+
 
 @app.route("/publish")
 def publish():
