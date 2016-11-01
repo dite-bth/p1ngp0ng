@@ -2,7 +2,7 @@
 import pymysql.cursors
 from flask import Flask, render_template, request
 from flask import redirect
-from gpiozero import Button
+#from gpiozero import Button
 import json
 import simplejson as json
 import pygame
@@ -22,9 +22,9 @@ win = "none"
 winner = False
 redpoints = 0
 bluepoints = 0
-Buttonred = Button(19)
-Buttonblue = Button(21)
-Buttonreset = Button(23)
+#Buttonred = Button(19)
+#Buttonblue = Button(21)s
+#Buttonreset = Button(23)
 player1 = ""
 player2 = ""
 global matchrunning
@@ -232,8 +232,8 @@ def dump():
         json.dump(info,outfile) 
 
         
-Buttonred.when_pressed = pointred
-Buttonblue.when_pressed = pointblue
+#Buttonred.when_pressed = pointred
+#Buttonblue.when_pressed = pointblue
 
 @app.route("/registrering_pingponghack")
 def registrering_pingponghack():
