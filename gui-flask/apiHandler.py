@@ -1,10 +1,12 @@
 
 from flask import render_template, Flask, request, redirect
-
+from flask_cors import CORS, cross_origin
 import config
 import json
 
 app = Flask(__name__)
+
+cors = CORS(app, resources={r"*": {"origins": "*"}})
 @app.route('/users/<card_id>')
 def users(card_id):
     query = "SELECT * FROM user WHERE cardID=%s"
@@ -36,4 +38,4 @@ def register():
 
 
 if __name__ == "__main__":
-    app.run(debug = True)
+    app.run(debug = True, host='193.11.185.238')
