@@ -1,0 +1,1 @@
+[{"Redset": 0, "Blueset": 0, "Bluepoints": 0, "Winner": "red", "Redpoints": 6}]

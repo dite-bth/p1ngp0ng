@@ -1,5 +1,5 @@
 from flask import Flask
-
+from flask import render_template
 import gevent
 from gevent.wsgi import WSGIServer
 from gevent.queue import Queue
@@ -10,7 +10,7 @@ subscriptions = []
 
 @app.route('/')
 def users():
-    return "hello"
+	return render_template('screen.html')
 
 @app.route("/publish")
 def publish():
