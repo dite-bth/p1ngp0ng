@@ -9,7 +9,7 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 	<script src="javascript.js"></script>
 
-	<link rel="stylesheet" href="style.css">
+	
 	<script type="text/javascript" src="javascript.js"></script>
 	<link rel="stylesheet" href="style.css" type="text/css">
 	<title></title>
@@ -24,15 +24,12 @@
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<h3 class="panel-title">Svep BTH-kort</h3>
+						<h4 id="playercheck">Spelare 1 OK!</h4>
 					</div>
 					<div class="panel-body">
-						<form role="form">
-
-							<div class="form-group">
-								<input type="password" autofocus="autofocus"  class="form-control input-sm" id="id-input" placeholder="id">
-							</div>
-
-						</form>
+						<div class="form-group">
+							<input type="password" autofocus="autofocus"  class="form-control input-sm" id="id-input" placeholder="id">
+						</div>
 					</div>
 				</div>
 			</div>
@@ -40,38 +37,39 @@
 	</div>
 
 
+193.11.185.238:5000/users/kortnummer här.
 
 
 
-
-<div class="container" id="form2">
-	<div class="row centered-form">
-		<div class="col-xs-12 col-sm-8 col-md-4 col-sm-offset-2 col-md-offset-4">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">Registrera en ny användare</h3>
-				</div>
-				<div class="panel-body">
-					<form role="form" method="post" action="http://193.11.184.62:80/pingponghack_register.php">
-						<div class="row">
-							<div class="col-xs-6 col-sm-6 col-md-6">
-								<div class="form-group2">
-									<input type="text" name="nickname" id="nickname" class="form-control input-sm" placeholder="Skriv ett Smeknamn">
+	<div class="container" id="form2">
+		<div class="row centered-form">
+			<div class="col-xs-12 col-sm-8 col-md-4 col-sm-offset-2 col-md-offset-4">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Skriv ett smeknamn</h3>
+					</div>
+					<div class="panel-body">
+						<form role="form" method="post" action="http://193.11.185.238:5000/register">
+							<div class="row">
+								<div class="col-xs-9 col-sm-9 col-md-9">
+									<div class="form-group2 text-center">
+										<input type="text" name="name" id="nickname" class="form-control input-sm" placeholder="Skriv här">
+									</div>
 								</div>
+
 							</div>
 
-						</div>
-
-						<input type="submit" value="Registrera" class="btn btn-info btn-block">
-					</body>
-				</form>
+							<input type="submit" value="Registrera" class="btn btn-info" id="regbutton" >
+						</body>
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
 </div>
 </div>
 
 </body>
 </html>
+
 
