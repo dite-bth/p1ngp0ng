@@ -3,6 +3,7 @@ import pymysql.cursors
 from flask import Flask, render_template, request, Response
 from flask import redirect
 import requests
+from flask_cors import CORS, cross_origin
 from gpiozero import Button
 import json
 import simplejson as json
@@ -14,6 +15,10 @@ from gevent.queue import Queue
 from sse import ServerSentEvent
 
 app = Flask(__name__)
+CORS(app)
+
+subscriptions = []
+
 
 subscriptions = []
 
@@ -28,14 +33,19 @@ bluepoints = 0
 Buttonred = Button(19)
 Buttonblue = Button(21)
 Buttonreset = Button(23)
-player1 = ""
-player2 = ""
+player1 = "Player 1"
+player2 = "Player 2"
 global matchrunning
 matchrunning = True
 
 @app.route("/")                                                                     #Visar att detta är rootsidan.
 def index():
     return render_template("start.html")                                            #Här kan man lägga in url för att skicka till annan sida.
+
+
+@app.route("/match")                                                                     #Visar att detta är rootsidan.
+def match():
+    return render_template("MatchGUI/index.html")                                            #Här kan man lägga in url för att skicka till annan sida.
 
 
 @app.route("/register/", methods = ["POST"])                                        #Denna def får fram och visar vad nicknacmet för det scannade kortet är
@@ -282,19 +292,9 @@ def subscribe():
 
 @app.route('/playgame')
 def playgame():
-	return render_template('index.html')
+    return render_template('index.html')
 
 if __name__ == "__main__":
     app.debug = True
-    server = WSGIServer(("0.0.0.0", 5000), app)
+    server = WSGIServer(("127.0.0.1", 5000), app)
     server.serve_forever()
-
-
-
-
-
-
-
-
-
-
